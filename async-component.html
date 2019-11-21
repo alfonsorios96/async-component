@@ -1,0 +1,87 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../loading-placeholder/loading-placeholder.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+
+<dom-module id="async-component">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <iron-ajax
+    id="api"
+    url="https://randomuser.me/api/"
+    handle-as="json"
+    on-response="handleResponse"
+    debounce-duration="300"
+    ></iron-ajax>
+    <template is="dom-if" if="[[__isLoading]]">
+        <loading-placeholder style="width:200px;height:20px;"></loading-placeholder>
+    </template>
+    <ul>
+      <template is="dom-repeat" items="[[users]]" as="user">
+        <li>[[user.email]]</li>
+      </template>
+    </ul>
+  </template>
+
+  <script>
+    /**
+     * `async-component`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class AsyncComponent extends Polymer.Element {
+      static get is() { return 'async-component'; }
+      static get properties() {
+        return {
+          users: {
+            type: Array,
+            value: []
+          },
+          __isLoading: {
+            type: Boolean,
+            computed: '__usersChanged(users)'
+          }
+        };
+      }
+
+      fetch(){
+        fetch('https://randomuser.me/api/')
+          .then(response => {
+            return response.json();
+          })
+          .then(data => {
+            this.users = data.results;
+            this.__reset();
+          });
+      }
+
+      ironAjax(){
+        this.$.api.generateRequest();
+          this.__reset();
+      }
+
+      handleResponse(){
+        const response = this.$.api.lastResponse;
+        this.users = response.results;
+      }
+
+      __reset(){
+        setTimeout( () => {
+            this.users = [];
+        }, 2000);
+      }
+
+      __usersChanged(){
+        return this.users.length < 1;
+      }
+    }
+
+    window.customElements.define(AsyncComponent.is, AsyncComponent);
+  </script>
+</dom-module>

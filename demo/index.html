@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>async-component demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../../paper-button/paper-button.html">
+    <link rel="import" href="../async-component.html">
+
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+      </style>
+    </custom-style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>Basic async-component demo</h3>
+      <demo-snippet>
+        <template>
+          <async-component></async-component>
+          <paper-button id="fetch">Fetch</paper-button>
+          <paper-button id="ajax">Iron-Ajax</paper-button>
+          <script>
+            const component = document.querySelector('async-component');
+            document.querySelector('#fetch').addEventListener('click', () => {
+              component.fetch();
+            });
+            document.querySelector('#ajax').addEventListener('click', () => {
+              component.ironAjax();
+            });
+          </script>
+        </template>
+      </demo-snippet>
+    </div>
+  </body>
+</html>
